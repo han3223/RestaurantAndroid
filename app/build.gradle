@@ -4,6 +4,16 @@ plugins {
 }
 
 android {
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res',
+                            'src/main/res/drawable/cold_snack'
+                    ]
+        }
+    }
+
     compileSdk 32
 
     defaultConfig {
