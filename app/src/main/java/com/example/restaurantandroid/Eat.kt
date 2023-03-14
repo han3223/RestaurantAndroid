@@ -1,9 +1,9 @@
 package com.example.restaurantandroid
 
-sealed class Eat(var route: String?, var icon: Int?, var title: String?, var price: Int?) {
+sealed class Eat(var route: String?, var icon: Int?, var title: String?, var description: String?, var price: Int?) {
     class Food {
         class ColdSnacks {
-            object Line : Eat("lineCategory", R.drawable.line, "Холодные закуски", null)
+            object Line : Eat("lineCategory", R.drawable.line, "Холодные закуски", "Hello", null)
             class Fish {
                 object Line : Eat("lineSubcategory", R.drawable.line, "Рыбные", null)
                 object ColdFishSnack1 :
