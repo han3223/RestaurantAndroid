@@ -70,4 +70,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+//    implementation "org.jetbrains.exposed:exposed-core:0.40.1"
+//    implementation "org.jetbrains.exposed:exposed-dao:0.40.1"
+//    implementation "org.jetbrains.exposed:exposed-jdbc:0.40.1"
+//    implementation "org.jetbrains.exposed:exposed-java-time:0.40.1"
 }

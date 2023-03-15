@@ -6,12 +6,7 @@ import java.sql.DriverManager;
 public class DBHandler {
     private Connection connection;
 
-    private final static String DB_URL = "jdbc:postgresql://172.20.8.18/kp0091_05_restaurant";
-    private final static String DB_USER = "st0091";
-    private final static String DB_PASSWORD = "qwerty91";
-
     private boolean status;
-
 
     public void getConnection()
     {
@@ -22,14 +17,14 @@ public class DBHandler {
                 try
                 {
                     Class.forName("org.postgresql.Driver");
-                    connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                    connection = DriverManager.getConnection("jdbc:postgresql://eu-central-1.aws.neon.tech/Restaurant?", "han3223", "NeHn48hTMSWB");
                     status = true;
                     System.out.println("Подключено к БД:" + status);
                 }
                 catch (Exception e)
                 {
                     status = false;
-                    System.out.print(e.getMessage());
+                    System.out.print(e.getMessage() + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     e.printStackTrace();
                 }
             }
@@ -52,7 +47,7 @@ public class DBHandler {
         try
         {
             Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            c = DriverManager.getConnection("jdbc:postgresql://eu-central-1.aws.neon.tech/Restaurant?user=han3223&password=NeHn48hTMSWB");
         }
         catch(Exception e)
         {
