@@ -280,7 +280,7 @@ sealed class Eat(var route: String?, var icon: Int?, var title: String?, var des
                 object SecondVeg2 : Eat("second_veg2", R.drawable.second_veg2, "Рулетики сибаса", "Рулетики с запеченными кабачками и перцем", 160, 270)
                 object SecondVeg3 : Eat("second_veg3", R.drawable.second_veg3, "Рататуй", "Салат из баклажанов, болграского перца и свежего огурца", 165, 300)
                 object SecondVeg4 : Eat("second_veg4", R.drawable.second_veg4, "Жареный картофель", "Жареный картофель с грибами", 230, 355)
-                object SecondVeg5 : Eat("second_veg5", R.drawable.second_veg5, "Second_veg5", null, null, null)
+                object SecondVeg5 : Eat("second_veg5", R.drawable.second_veg5, "Гриль-салат", "Гриль-салат с цукини, помидорами, болгарксим перцем и баклажанами", 130, 340)
 
                 var item = mutableListOf(
                     Line,

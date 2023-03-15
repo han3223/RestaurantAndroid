@@ -23,17 +23,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.example.restaurantandroid.database.DBHandler
 import com.example.restaurantandroid.ui.theme.RestaurantAndroidTheme
 
 
 class MainActivity : ComponentActivity() {
-
-
+//    val dbHandler: DBHandler = DBHandler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             RestaurantAndroidTheme {
                 Scaffold(topBar = { Header() }, bottomBar = { Footer() }) {
+//                    dbHandler.getConnection()
                     Body()
                 }
                 // A surface container using the 'background' color from the theme
@@ -174,7 +175,7 @@ fun Body() {
                                         contentScale = ContentScale.FillBounds
                                     )
                                     Column(modifier = Modifier.padding(10.dp)) {
-                                        Text("Название блюда")
+                                        Text(item.title!!)
                                         Image(
                                             painter = painterResource(id = R.drawable.line),
                                             contentDescription = item.title,
@@ -184,7 +185,7 @@ fun Body() {
                                             alignment = Alignment.Center,
                                             contentScale = ContentScale.FillBounds
                                         )
-                                        Text("Тунец\nЛосось\nСёмга")
+                                        Text(item.description!!)
                                         Image(
                                             painter = painterResource(id = R.drawable.line),
                                             contentDescription = item.title,
@@ -195,7 +196,7 @@ fun Body() {
                                             contentScale = ContentScale.FillBounds
                                         )
                                         Text(
-                                            "каллорийность - 000ккал \nбелки - 00г, жиры - 00г, углеводы - 00г",
+                                            "каллорийность - ${item.calories!!} ккал \nбелки - 00г, жиры - 00г, углеводы - 00г",
                                             fontSize = 3.em
                                         )
                                     }
@@ -204,7 +205,6 @@ fun Body() {
                                     AddFood()
                                 }
                                 Price(item)
-
                             }
                         }
                     }
