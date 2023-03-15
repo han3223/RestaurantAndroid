@@ -69,9 +69,9 @@ fun Header() {
 @Composable
 fun Footer() {
     val items = listOf(
-        NavigationItem.home,
-        NavigationItem.basket,
-        NavigationItem.profile,
+        NavHostController.home,
+        NavHostController.basket,
+        NavHostController.profile,
     )
     BottomNavigation(
         backgroundColor = colorResource(id = R.color.nav), contentColor = Color.White
