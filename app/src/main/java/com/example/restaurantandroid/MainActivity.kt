@@ -18,11 +18,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import com.example.restaurantandroid.database.DBHandler
-import com.example.restaurantandroid.ui.theme.RestaurantAndroidTheme
+import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 
 
 class MainActivity : ComponentActivity() {
@@ -30,22 +36,43 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RestaurantAndroidTheme {
-                Scaffold(topBar = { Header() }, bottomBar = { Footer() }) {
-//                    dbHandler.getConnection()
-                    Body()
-                }
-                // A surface container using the 'background' color from the theme
-
-            }
+            MainScreen()
         }
     }
 }
 
-private val showDialog = mutableStateOf(-1)
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+    Scaffold(
+        topBar = { TopBar() },
+        bottomBar = { BottomNavigationBar(navController) },
+        content = {  // We have to pass the scaffold inner padding to our content. That's why we use Box.
+            Box() {
+                Navigation(navController)
+            }
+        },
+        backgroundColor = colorResource(R.color.black) // Set background color to avoid the white flashing when you switch between screens
+    )
+}
 
 @Composable
-fun Header() {
+fun Navigation(navController: androidx.navigation.NavHostController) {
+    NavHost(navController, startDestination = NavHostController.home.route) {
+        composable(NavHostController.home.route) {
+            HomeScreen()
+        }
+        composable(NavHostController.basket.route) {
+            BasketScreen()
+        }
+        composable(NavHostController.profile.route) {
+            ProfileScreen()
+        }
+    }
+}
+
+@Composable
+fun TopBar() {
     Box(modifier = Modifier.fillMaxWidth()) {
         Image(
             painter = painterResource(R.drawable.header),
@@ -66,7 +93,7 @@ fun Header() {
 }
 
 @Composable
-fun Footer() {
+fun BottomNavigationBar(navController: androidx.navigation.NavHostController) {
     val items = listOf(
         NavHostController.home,
         NavHostController.basket,
@@ -75,6 +102,8 @@ fun Footer() {
     BottomNavigation(
         backgroundColor = colorResource(id = R.color.nav), contentColor = Color.White
     ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             BottomNavigationItem(icon = {
                 Icon(
@@ -89,14 +118,31 @@ fun Footer() {
                 alwaysShowLabel = true,
                 selected = false,
                 onClick = {
-                    /* Add code later */
-                })
+                    navController.navigate(item.route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }
 
+private val showDialog = mutableStateOf(-1)
+
 @Composable
-fun Body() {
+fun HomeScreen() {
     val items = Eat.Food().food
     Box(
         modifier = Modifier
@@ -112,7 +158,8 @@ fun Body() {
                             item.title!!,
                             textAlign = TextAlign.Start,
                             modifier = Modifier.padding(20.dp, 0.dp, 0.dp, 0.dp),
-                            fontSize = 6.em
+                            fontSize = 6.em,
+                            color = Color.White
                         )
                         Box(
                             modifier = Modifier
@@ -136,7 +183,8 @@ fun Body() {
                         Text(
                             item.title!!,
                             textAlign = TextAlign.Start,
-                            modifier = Modifier.padding(20.dp, 0.dp, 0.dp, 0.dp)
+                            modifier = Modifier.padding(20.dp, 0.dp, 0.dp, 0.dp),
+                            color = Color.White
                         )
                         Box(
                             modifier = Modifier.fillMaxWidth(),
@@ -174,7 +222,7 @@ fun Body() {
                                         contentScale = ContentScale.FillBounds
                                     )
                                     Column(modifier = Modifier.padding(10.dp)) {
-                                        Text(item.title!!)
+                                        Text(item.title!!, color = Color.White)
                                         Image(
                                             painter = painterResource(id = R.drawable.line),
                                             contentDescription = item.title,
@@ -184,7 +232,7 @@ fun Body() {
                                             alignment = Alignment.Center,
                                             contentScale = ContentScale.FillBounds
                                         )
-                                        Text(item.description!!)
+                                        Text(item.description!!, color = Color.White)
                                         Image(
                                             painter = painterResource(id = R.drawable.line),
                                             contentDescription = item.title,
@@ -196,7 +244,8 @@ fun Body() {
                                         )
                                         Text(
                                             "каллорийность - ${item.calories!!} ккал \nбелки - 00г, жиры - 00г, углеводы - 00г",
-                                            fontSize = 3.em
+                                            fontSize = 3.em,
+                                            color = Color.White
                                         )
                                     }
                                 }
@@ -207,6 +256,169 @@ fun Body() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ProfileScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.black))
+            .padding(0.dp, 15.dp, 0.dp, 0.dp),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Box(modifier = Modifier.width(300.dp)) {
+            Column() {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column() {
+                        Text(text = "Важенин Иван", color = Color.White, fontSize = 6.em)
+                        Text(text = "Анатольевич", color = Color.White, fontSize = 6.em)
+                    }
+
+                    Image(
+                        painter = painterResource(R.drawable.profile),
+                        contentDescription = "profile",
+                        modifier = Modifier.size(60.dp),
+                        alignment = Alignment.BottomEnd
+                    )
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = "line",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .clip(RoundedCornerShape(25.dp)),
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.FillBounds
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "тел: 89116172604", color = Color.White, fontSize = 6.em)
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "email: ivan.vazhenin34@gmail.com",
+                        color = Color.White,
+                        fontSize = 6.em,
+                        modifier = Modifier.width(260.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(30.dp, 120.dp)
+                ) {
+                    Text(
+                        text = "адрес доставки:\nул. Коровникова, д. 12, кв. 101",
+                        color = Color.White,
+                        fontSize = 6.em,
+                        modifier = Modifier.width(260.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(30.dp, 120.dp)
+                        .padding(0.dp, 25.dp, 0.dp, 0.dp)
+                ) {
+                    Text(
+                        text = "История заказов:",
+                        color = Color.White,
+                        fontSize = 6.em,
+                        modifier = Modifier.width(260.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(30.dp, 120.dp)
+                        .padding(0.dp, 5.dp, 0.dp, 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Время заказа",
+                        color = Color.White,
+                        fontSize = 5.em,
+                    )
+                    Text(
+                        text = "Сумма",
+                        color = Color.White,
+                        fontSize = 5.em,
+                    )
+                    Text(
+                        text = "Чек",
+                        color = Color.White,
+                        fontSize = 5.em,
+                    )
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = "line",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .clip(RoundedCornerShape(25.dp)),
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.FillBounds
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(30.dp, 120.dp)
+                        .padding(0.dp, 5.dp, 0.dp, 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "12 фев. 2023 г. 18:32",
+                        color = Color.White,
+                        fontSize = 4.em,
+                    )
+                    Text(
+                        text = "1780 ₽",
+                        color = Color.White,
+                        fontSize = 4.em,
+                    )
+                    Text(
+                        text = "Посмотреть",
+                        color = Color.White,
+                        fontSize = 4.em,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun BasketScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.black))
+            .wrapContentSize(Alignment.Center)
+    ) {
+        Box(modifier = Modifier.width(300.dp)) {
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.fillMaxWidth(0.5f),
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.btn_active))
+            ) {
+
+            }
+//            Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.5f)) {
+//
+//            }
+        }
+
     }
 }
 
@@ -245,7 +457,7 @@ fun AddFood() {
                     text = 0
                 else
                     text -= 1
-                      },
+            },
             modifier = Modifier
                 .clip(CircleShape)
                 .size(40.dp)
@@ -285,9 +497,3 @@ fun AddFood() {
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun PreviewMessageCard() {
-//    Header("Android")
-//}
