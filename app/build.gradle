@@ -14,12 +14,12 @@ android {
         }
     }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.restaurantandroid"
         minSdk 24
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -46,7 +46,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion "1.3.1"
     }
     packagingOptions {
         resources {
@@ -73,6 +73,11 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:0.8.4"))
+    implementation("io.github.jan-tennert.supabase:gotrue-kt")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt-android:0.8.4")
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 
 //    implementation "org.jetbrains.exposed:exposed-core:0.40.1"
 //    implementation "org.jetbrains.exposed:exposed-dao:0.40.1"
