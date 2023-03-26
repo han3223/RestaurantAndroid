@@ -53,11 +53,11 @@ sealed interface Postgrest : MainPlugin<Postgrest.Config> {
      * Config for the Postgrest plugin
      * @param defaultSchema The default schema to use for the requests. Defaults to "public"
      */
-    data class Config(override var customUrl: String? = null, override var jwtToken: String? = null, var defaultSchema: String = "public"): MainConfig
+    data class Config(override var customUrl: String? = "https://qyqqzftymegxiemintrs.supabase.co", override var jwtToken: String? = "bqz/sSdZQCVl7Wqi7Dw0sSEskHBpoQu8JJ4jM2qhFnihChDBTFkFiWe+5eCUjSzvZ5HuZOIeycs2sybYC2xvXw==", var defaultSchema: String = "public"): MainConfig
 
     companion object : SupabasePluginProvider<Config, Postgrest> {
 
-        override val key = "rest"
+        override val key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5cXF6ZnR5bWVneGllbWludHJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk4MzYyNzgsImV4cCI6MTk5NTQxMjI3OH0.7JPVILpQDuevPVj1HK-uihNh9u322o_Ow-J289mocvM"
         const val API_VERSION = 1
 
         override fun createConfig(init: Config.() -> Unit) = Config().apply(init)
